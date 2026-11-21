@@ -1,0 +1,32 @@
+page { background: #f5f6fa; color: #182230; }
+.page-report { padding: 28rpx 24rpx calc(40rpx + env(safe-area-inset-bottom)); }
+.report-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24rpx; }
+.report-title, .report-period { display: block; }
+.report-title { font-size: 36rpx; font-weight: 700; }
+.report-period { margin-top: 8rpx; color: #64748b; font-size: 25rpx; }
+.month-picker { padding: 14rpx 22rpx; border: 1rpx solid #1a6fe8; border-radius: 8rpx; color: #1a6fe8; font-size: 26rpx; }
+.empty { padding: 90rpx 24rpx; text-align: center; color: #7b8794; background: #fff; border-radius: 8rpx; }
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
+.kpi-item { min-width: 0; padding: 24rpx; background: #fff; border-radius: 8rpx; }
+.kpi-label, .kpi-value { display: block; }
+.kpi-label { color: #64748b; font-size: 24rpx; }
+.kpi-value { margin-top: 12rpx; font-size: 33rpx; font-weight: 700; overflow-wrap: anywhere; }
+.income { color: #07875d; }
+.expense { color: #d83b42; }
+.primary { color: #1a6fe8; }
+.muted { color: #82909c; }
+.compare-row { display: flex; justify-content: space-between; padding: 24rpx; margin-top: 16rpx; background: #fff; border-radius: 8rpx; font-size: 27rpx; }
+.section { margin-top: 20rpx; padding: 26rpx 24rpx; background: #fff; border-radius: 8rpx; }
+.section-title { margin-bottom: 24rpx; font-size: 30rpx; font-weight: 650; }
+.category-item { position: relative; padding: 0 0 38rpx; margin-bottom: 22rpx; }
+.category-item:last-child { margin-bottom: 0; }
+.category-head, .category-name { display: flex; align-items: center; }
+.category-head { justify-content: space-between; font-size: 26rpx; }
+.category-name { min-width: 0; }
+.dot { flex: 0 0 auto; width: 14rpx; height: 14rpx; margin-right: 14rpx; border-radius: 50%; }
+.bar { height: 12rpx; margin-top: 14rpx; overflow: hidden; background: #edf1f5; border-radius: 6rpx; }
+.bar-fill { height: 100%; border-radius: 6rpx; }
+.category-amount { position: absolute; right: 0; bottom: 0; color: #536170; font-size: 24rpx; }
+.category-empty { padding: 20rpx 0; text-align: center; color: #82909c; font-size: 25rpx; }
+.export-btn { margin-top: 28rpx; background: #1a6fe8; color: #fff; border-radius: 8rpx; font-size: 29rpx; }
+.export-btn[disabled] { background: #aab7c7; color: #fff; }

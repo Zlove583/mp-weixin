@@ -1,0 +1,10 @@
+<view class="page">
+  <view class="card">
+    <view class="title">账单明细导出</view>
+    <view class="desc">导出收入、支出、凭证号、日期和摘要为 Excel 文件。</view>
+    <view class="field"><text>开始日期</text><picker mode="date" bindchange="onStartDate"><view>{{startDate || '不限'}}</view></picker></view>
+    <view class="field"><text>结束日期</text><picker mode="date" bindchange="onEndDate"><view>{{endDate || '不限'}}</view></picker></view>
+    <view class="count">将导出 {{count}} 条明细</view>
+    <button class="export" bindtap="exportLedger" loading="{{exporting}}" disabled="{{exporting}}">{{exporting ? '正在生成…' : '导出 Excel 明细账'}}</button>
+  </view>
+</view>

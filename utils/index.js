@@ -1,0 +1,1 @@
+"use strict";const e=require("../common/vendor.js");exports.confirm=function(r,n="提示"){return new Promise(o=>{e.index.showModal({title:n,content:r,success:e=>{e.confirm?o(!0):o(!1)}})})},exports.validateNumber=function(e,r="数值"){return e||0===e?isNaN(Number(e))?`${r}必须为数字`:Number(e)<0?`${r}不能为负数`:"":`${r}不能为空`};

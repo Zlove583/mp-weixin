@@ -1,0 +1,112 @@
+<!--
+  北疆农牧数字化专属模块 - 首页入口
+  展示两大核心功能入口 + 数据概览
+-->
+<view class="page-agri">
+  <!-- 头部区域 -->
+  <view class="agri-header">
+    <view class="agri-header__bg"></view>
+    <view class="agri-header__content">
+      <text class="agri-header__title">北疆农牧数字化</text>
+      <text class="agri-header__subtitle">内蒙古·智慧农牧管理平台</text>
+    </view>
+    <!-- 存栏统计卡片 -->
+    <view class="agri-stats">
+      <view class="agri-stat">
+        <text class="agri-stat__value">{{summary.aliveCount}}</text>
+        <text class="agri-stat__label">当前存栏（头/只）</text>
+      </view>
+      <view class="agri-stat">
+        <text class="agri-stat__value">{{summary.soldCount}}</text>
+        <text class="agri-stat__label">累计出栏（头/只）</text>
+      </view>
+      <view class="agri-stat">
+        <text class="agri-stat__value">¥{{formatK(summary.totalValue)}}</text>
+        <text class="agri-stat__label">存栏总价值</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能入口区 -->
+  <view class="agri-entries">
+    <!-- 牲畜存栏台账 -->
+    <view class="agri-entry agri-entry--livestock" bindtap="goLivestock">
+      <view class="agri-entry__icon">🐄</view>
+      <view class="agri-entry__info">
+        <text class="agri-entry__title">牲畜存栏台账</text>
+        <text class="agri-entry__desc">管理牛、羊、马等牲畜全流程信息</text>
+        <view class="agri-entry__tags">
+          <text class="agri-entry__tag">购入登记</text>
+          <text class="agri-entry__tag">出栏记录</text>
+          <text class="agri-entry__tag">存栏统计</text>
+        </view>
+      </view>
+      <text class="agri-entry__arrow">›</text>
+    </view>
+
+    <!-- 免税核算申报 -->
+    <view class="agri-entry agri-entry--tax" bindtap="goTaxExemption">
+      <view class="agri-entry__icon">📊</view>
+      <view class="agri-entry__info">
+        <text class="agri-entry__title">自产农产品免税核算</text>
+        <text class="agri-entry__desc">自动匹配地方免税政策·一键核算</text>
+        <view class="agri-entry__tags">
+          <text class="agri-entry__tag">增值税免征</text>
+          <text class="agri-entry__tag">所得税优惠</text>
+          <text class="agri-entry__tag">一键申报</text>
+        </view>
+      </view>
+      <text class="agri-entry__arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 存栏种类分布 -->
+  <z-card title="存栏种类分布" wx:if="{{summary.byCategory && summary.byCategory.length > 0}}">
+    <view class="category-list">
+      <view class="category-item" wx:for="{{summary.byCategory}}" wx:key="category">
+        <view class="category-item__header">
+          <text class="category-item__name">{{item.category}}</text>
+          <text class="category-item__count">{{item.alive}}头</text>
+        </view>
+        <view class="category-item__bar">
+          <view class="category-item__fill" style="width: {{item.alive / summary.aliveCount * 100}}%"></view>
+        </view>
+        <text class="category-item__value">¥{{formatK(item.value)}}</text>
+      </view>
+    </view>
+  </z-card>
+
+  <!-- 最近操作记录 -->
+  <z-card title="最近动态" wx:if="{{recentList.length > 0}}">
+    <view class="timeline">
+      <view class="timeline-item" wx:for="{{recentList}}" wx:key="id">
+        <view class="timeline-item__dot timeline-item__dot--{{item.dotClass}}"></view>
+        <view class="timeline-item__content">
+          <view class="flex-between">
+            <text class="fw-600">{{item.title}}</text>
+            <text class="{{item.amountClass}}">{{item.amount}}</text>
+          </view>
+          <text class="text-secondary font-sm">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </z-card>
+
+  <!-- 快速操作 -->
+  <view class="agri-quick-actions">
+    <button class="agri-btn agri-btn--primary" bindtap="goAddLivestock">+ 新增牲畜台账</button>
+    <button class="agri-btn agri-btn--secondary" bindtap="goQuickCalc">📊 快速免税核算</button>
+  </view>
+
+  <!-- 政策速递 -->
+  <z-card title="📋 北疆农牧政策速递" accent="{{true}}" accent-color="#07c160">
+    <view class="policy-list">
+      <view class="policy-item" wx:for="{{policies}}" wx:key="id">
+        <text class="policy-item__dot">•</text>
+        <text class="policy-item__text">{{item.text}}</text>
+      </view>
+    </view>
+  </z-card>
+
+  <view class="agri-safe-bottom"></view>
+</view>

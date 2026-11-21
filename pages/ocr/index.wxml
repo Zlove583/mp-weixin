@@ -1,0 +1,177 @@
+<view class="page-ocr">
+  <!-- ═══ 票据类型选择 ═══ -->
+  <view class="doc-type-bar">
+    <view
+      wx:for="{{docTypes}}" wx:key="key"
+      class="doc-type-tab {{activeDocType === item.key ? 'doc-type-tab--active' : ''}}"
+      data-type="{{item.key}}"
+      bindtap="switchDocType"
+    >
+      <text class="doc-type-icon">{{item.icon}}</text>
+      <text class="doc-type-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- ═══ 提示文字（仅在无图片无结果时显示） ═══ -->
+  <view class="ocr-tips" wx:if="{{!imagePath && !ocrResult && !ocrError}}">
+    <text>💡 请将票据平放在桌面上拍摄，确保光线充足、四角完整</text>
+  </view>
+
+  <!-- ═══ 图片预览区 ═══ -->
+  <view class="ocr-preview">
+    <!-- 空状态：点击拍照 -->
+    <view wx:if="{{!imagePath}}" class="ocr-placeholder" bindtap="chooseImage">
+      <text class="ocr-placeholder__icon">📷</text>
+      <text class="ocr-placeholder__text">点击拍摄或选择票据图片</text>
+      <text class="ocr-placeholder__sub">支持：增值税发票、电子发票、银行回单</text>
+    </view>
+
+    <!-- 已选图片 -->
+    <view wx:else class="ocr-image-wrap">
+      <image class="ocr-image" src="{{imagePath}}" mode="widthFix" bindtap="previewImage" />
+      <view class="ocr-image-mask" wx:if="{{!isRecognizing && !ocrResult && !ocrError}}">
+        <text>点击图片可放大查看</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ═══ 操作按钮（已选图但未识别时） ═══ -->
+  <view class="ocr-actions" wx:if="{{imagePath && !isRecognizing && !ocrResult && !ocrError}}">
+    <button class="ocr-btn ocr-btn--primary" bindtap="startOCR">🔍 开始识别</button>
+    <button class="ocr-btn ocr-btn--ghost" bindtap="chooseImage">重新选择</button>
+  </view>
+
+  <!-- ═══ 识别中 ═══ -->
+  <view class="ocr-loading" wx:if="{{isRecognizing}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">AI 智能识别中...</text>
+    <text class="loading-sub">正在分析票据内容，请稍候</text>
+  </view>
+
+  <!-- ═══ 识别失败：错误提示面板 ═══ -->
+  <view class="ocr-error-panel" wx:if="{{ocrError && !isRecognizing}}">
+    <view class="error-icon">⚠️</view>
+    <view class="error-content">
+      <text class="error-title">识别失败</text>
+      <text class="error-message">{{ocrError}}</text>
+      <text class="error-hint">请检查网络连接和云函数状态后，重新拍照尝试</text>
+    </view>
+    <view class="error-actions">
+      <button class="ocr-btn ocr-btn--ghost" bindtap="reset">重新拍照</button>
+      <button class="ocr-btn ocr-btn--primary" bindtap="startOCR" wx:if="{{imagePath}}">重试识别</button>
+    </view>
+  </view>
+
+  <!-- ═══ 识别结果 ═══ -->
+  <block wx:if="{{ocrResult && fieldConfig && !ocrError}}">
+    <!-- 结果标题 -->
+    <view class="result-header">
+      <view class="result-header__left">
+        <text class="result-doctype">{{ocrResult.docTypeName}}</text>
+        <text class="result-confidence" wx:if="{{ocrResult.confidence}}">置信度 {{ocrResult.confidence}}%</text>
+        <text class="result-badge badge-cloud">云端识别</text>
+      </view>
+      <view class="result-header__right">
+        <text class="result-rescan" bindtap="reset">重新识别</text>
+      </view>
+    </view>
+
+    <!-- 字段分组（全部动态绑定来自 ocrResult.fields） -->
+    <view class="result-groups">
+      <view wx:for="{{fieldConfig.groups}}" wx:key="label" wx:for-item="group" class="result-group">
+        <text class="group-label">{{group.label}}</text>
+
+        <view class="field-card">
+          <view
+            wx:for="{{group.fields}}" wx:key="key" wx:for-item="field"
+            class="field-row {{editingField === field.key ? 'field-row--editing' : ''}}"
+          >
+            <view class="field-left">
+              <text class="field-icon">{{field.icon}}</text>
+              <text class="field-label">{{field.label}}</text>
+            </view>
+
+            <!-- 编辑态 -->
+            <view wx:if="{{editingField === field.key}}" class="field-edit">
+              <input
+                class="field-input"
+                value="{{editingValue}}"
+                bindinput="onEditInput"
+                focus="{{true}}"
+                type="{{field.type === 'money' ? 'digit' : 'text'}}"
+                confirm-type="done"
+                bindconfirm="saveEditField"
+                bindblur="saveEditField"
+              />
+            </view>
+
+            <!-- 显示态 -->
+            <view wx:else class="field-right">
+              <text class="field-value {{field.type === 'money' ? 'field-value--money' : ''}} {{!ocrResult.fields[field.key] && ocrResult.fields[field.key] !== 0 ? 'field-value--empty' : ''}}">
+                {{ocrResult.fields[field.key] !== undefined && ocrResult.fields[field.key] !== null && ocrResult.fields[field.key] !== '' ? (field.type === 'money' ? '¥' + ocrResult.fields[field.key].toFixed(2) : ocrResult.fields[field.key]) : '-'}}
+              </text>
+              <text wx:if="{{field.editable}}" class="field-edit-btn" data-key="{{field.key}}" bindtap="startEditField">✏️</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══ 操作 ═══ -->
+    <view class="result-actions" wx:if="{{!voucherPreview}}">
+      <button class="action-btn action-btn--primary" bindtap="createVoucher">📝 生成记账凭证</button>
+    </view>
+
+    <!-- ═══ 凭证预览 ═══ -->
+    <view class="voucher-preview" wx:if="{{voucherPreview}}">
+      <text class="voucher-title">📋 凭证预览</text>
+      <view class="voucher-card">
+        <view class="voucher-row">
+          <text class="voucher-summary">摘要：{{voucherPreview.summary}}</text>
+          <text class="voucher-amount {{voucherPreview.type === 'expense' ? 'text-danger' : 'text-success'}}">¥{{voucherPreview.amount.toFixed(2)}}</text>
+        </view>
+        <view class="voucher-row">
+          <text class="voucher-subject">借：{{voucherPreview.debitSubject}}</text>
+        </view>
+        <view class="voucher-row">
+          <text class="voucher-subject">贷：{{voucherPreview.creditSubject}}</text>
+        </view>
+      </view>
+      <button class="action-btn action-btn--primary" bindtap="confirmVoucher">✅ 确认生成凭证</button>
+      <text class="voucher-cancel" bindtap="reset">返回修改</text>
+    </view>
+  </block>
+
+  <!-- ═══ 历史记录 ═══ -->
+  <view class="history-section">
+    <view class="history-header" bindtap="toggleHistory">
+      <text class="history-header__title">📋 识别记录</text>
+      <text class="history-header__count">{{historyRecords.length}}条</text>
+      <text class="history-header__arrow {{showHistory ? 'arrow-up' : ''}}">›</text>
+    </view>
+
+    <view wx:if="{{showHistory && historyRecords.length > 0}}" class="history-list">
+      <view
+        wx:for="{{historyRecords}}" wx:key="_id"
+        class="history-item"
+        data-record="{{item}}"
+        bindtap="loadHistoryRecord"
+      >
+        <view class="history-item__left">
+          <text class="history-item__type">{{item.docTypeName || '票据'}}</text>
+          <text class="history-item__date">{{item.createdAt}}</text>
+        </view>
+        <view class="history-item__right">
+          <text class="history-item__amount">¥{{item.fields.amount || item.fields.totalAmount || 0}}</text>
+          <text class="history-item__del" data-id="{{item._id}}" catchtap="deleteHistory">🗑️</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{showHistory && historyRecords.length === 0}}" class="history-empty">
+      <text>暂无识别记录</text>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

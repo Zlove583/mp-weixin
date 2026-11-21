@@ -1,0 +1,158 @@
+<!--
+  蒙小账 - 登录页
+  支持：微信一键登录 + 账号密码登录
+-->
+<view class="page-login">
+  <!-- 顶部品牌区 -->
+  <view class="login-header">
+    <view class="login-logo">📊</view>
+    <text class="login-title">蒙小账</text>
+    <text class="login-subtitle">智慧库存·财税管理</text>
+  </view>
+
+  <!-- 登录卡片 -->
+  <view class="login-card">
+    <!-- Tab切换 -->
+    <view class="login-tabs">
+      <view class="login-tab {{activeTab==='wechat'?'login-tab--active':''}}" bindtap="switchTab" data-tab="wechat">
+        <text>微信登录</text>
+      </view>
+      <view class="login-tab {{activeTab==='account'?'login-tab--active':''}}" bindtap="switchTab" data-tab="account">
+        <text>账号登录</text>
+      </view>
+    </view>
+
+    <!-- ========== 微信登录面板 ========== -->
+    <view class="login-panel" wx:if="{{activeTab==='wechat'}}">
+      <view class="login-avatar">
+        <image class="login-avatar__img" src="{{avatarUrl||'/static/images/default-avatar.png'}}" mode="aspectFill"/>
+      </view>
+      <text class="login-nickname" wx:if="{{nickName}}">{{nickName}}</text>
+      <text class="login-nickname login-nickname--placeholder" wx:else>授权获取微信信息</text>
+
+      <!-- 微信授权按钮 -->
+      <button class="login-btn login-btn--wechat" bindtap="handleWechatLogin" loading="{{wechatLoading}}" wx:if="{{!nickName}}">
+        <text class="login-btn__icon">💚</text>
+        <text>微信一键授权登录</text>
+      </button>
+
+      <!-- 已授权，直接登录 -->
+      <button class="login-btn login-btn--wechat" bindtap="handleWechatLogin" loading="{{wechatLoading}}" wx:else>
+        <text>确认登录</text>
+      </button>
+
+      <!-- 手机号快捷登录 -->
+      <button class="login-btn login-btn--phone" open-type="getPhoneNumber" bindgetphonenumber="handleGetPhoneNumber">
+        <text class="login-btn__icon">📱</text>
+        <text>手机号快捷登录</text>
+      </button>
+
+      <view class="login-divider">
+        <view class="login-divider__line"></view>
+        <text class="login-divider__text">其他方式</text>
+        <view class="login-divider__line"></view>
+      </view>
+
+      <view class="login-switch-link" bindtap="switchTab" data-tab="account">
+        <text>切换至账号密码登录 ›</text>
+      </view>
+    </view>
+
+    <!-- ========== 账号登录面板 ========== -->
+    <view class="login-panel" wx:if="{{activeTab==='account'}}">
+      <!-- 手机号输入 -->
+      <view class="form-section">
+        <text class="form-label">手机号</text>
+        <input
+          class="form-input form-input--icon"
+          type="number"
+          maxlength="11"
+          placeholder="请输入手机号"
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+        />
+        <text class="form-input-icon">📱</text>
+      </view>
+
+      <!-- 密码输入 -->
+      <view class="form-section">
+        <text class="form-label">密码</text>
+        <input
+          class="form-input form-input--icon"
+          type="text"
+          password="{{showPassword}}"
+          placeholder="请输入密码"
+          value="{{password}}"
+          bindinput="onPasswordInput"
+        />
+        <text class="form-input-icon">🔒</text>
+        <text class="form-pwd-toggle" bindtap="togglePassword">{{showPassword ? '🙈' : '👁️'}}</text>
+      </view>
+
+      <!-- 登录按钮 -->
+      <button class="login-btn login-btn--primary" bindtap="handleAccountLogin" loading="{{accountLoading}}">
+        <text>登 录</text>
+      </button>
+
+      <!-- 注册入口 -->
+      <view class="login-extra">
+        <text class="login-extra__link" bindtap="switchTab" data-tab="register">没有账号？立即注册</text>
+        <text class="login-extra__link">忘记密码？</text>
+      </view>
+
+      <view class="login-divider">
+        <view class="login-divider__line"></view>
+        <text class="login-divider__text">其他方式</text>
+        <view class="login-divider__line"></view>
+      </view>
+
+      <view class="login-switch-link" bindtap="switchTab" data-tab="wechat">
+        <text>切换至微信授权登录 ›</text>
+      </view>
+    </view>
+
+    <!-- ========== 注册面板 ========== -->
+    <view class="login-panel" wx:if="{{activeTab==='register'}}">
+      <view class="form-section">
+        <text class="form-label">手机号</text>
+        <input class="form-input form-input--icon" type="number" maxlength="11" placeholder="请输入手机号" value="{{regPhone}}" bindinput="onRegPhoneInput"/>
+        <text class="form-input-icon">📱</text>
+      </view>
+
+      <view class="form-section">
+        <text class="form-label">验证码</text>
+        <input class="form-input form-input--icon form-input--sms" type="number" maxlength="6" placeholder="请输入验证码" value="{{smsCode}}" bindinput="onSmsCodeInput"/>
+        <text class="form-input-icon">✉️</text>
+        <text class="form-sms-btn {{smsCountdown>0?'form-sms-btn--disabled':''}}" bindtap="sendSmsCode">{{smsCountdown>0?smsCountdown+'s后重发':'获取验证码'}}</text>
+      </view>
+
+      <view class="form-section">
+        <text class="form-label">设置密码</text>
+        <input class="form-input form-input--icon" type="text" password="{{true}}" placeholder="请设置6-20位密码" value="{{regPassword}}" bindinput="onRegPasswordInput"/>
+        <text class="form-input-icon">🔒</text>
+      </view>
+
+      <view class="form-section">
+        <text class="form-label">确认密码</text>
+        <input class="form-input form-input--icon" type="text" password="{{true}}" placeholder="请再次输入密码" value="{{regPassword2}}" bindinput="onRegPassword2Input"/>
+        <text class="form-input-icon">🔒</text>
+      </view>
+
+      <button class="login-btn login-btn--primary" bindtap="handleRegister" loading="{{registerLoading}}">
+        <text>注 册</text>
+      </button>
+
+      <view class="login-switch-link" bindtap="switchTab" data-tab="account">
+        <text>‹ 返回登录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部协议 -->
+  <view class="login-footer">
+    <text class="login-footer__text">登录即表示同意</text>
+    <text class="login-footer__link">《用户服务协议》</text>
+    <text class="login-footer__text">和</text>
+    <text class="login-footer__link">《隐私政策》</text>
+  </view>
+</view>

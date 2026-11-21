@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "z-card": "/components/z-card/z-card"
+  },
+  "navigationBarTitleText": "核算历史记录"
+}

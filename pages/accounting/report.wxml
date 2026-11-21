@@ -1,0 +1,50 @@
+<view class="page-report">
+  <view class="report-header">
+    <view>
+      <text class="report-title">经营分析报告</text>
+      <text class="report-period">{{report.label || ''}}</text>
+    </view>
+    <picker mode="date" fields="month" value="{{selectedMonth}}" bindchange="onMonthChange">
+      <view class="month-picker">选择月份</view>
+    </picker>
+  </view>
+
+  <view class="empty" wx:if="{{report && report.count === 0}}">所选月份暂无凭证数据</view>
+
+  <block wx:if="{{report && report.count > 0}}">
+    <view class="kpi-grid">
+      <view class="kpi-item"><text class="kpi-label">营业收入</text><text class="kpi-value income">¥{{report.totalIncomeText}}</text></view>
+      <view class="kpi-item"><text class="kpi-label">营业支出</text><text class="kpi-value expense">¥{{report.totalExpenseText}}</text></view>
+      <view class="kpi-item"><text class="kpi-label">净利润</text><text class="kpi-value {{report.profit >= 0 ? 'income' : 'expense'}}">¥{{report.profitText}}</text></view>
+      <view class="kpi-item"><text class="kpi-label">利润率</text><text class="kpi-value primary">{{report.profitMargin}}%</text></view>
+    </view>
+
+    <view class="compare-row">
+      <text>净利润较上月</text>
+      <text wx:if="{{report.comparedLastMonth !== null}}" class="{{report.comparedLastMonth >= 0 ? 'income' : 'expense'}}">{{report.compareDirection}} {{report.compareAbsolute}}%</text>
+      <text wx:else class="muted">暂无对比</text>
+    </view>
+
+    <view class="section">
+      <view class="section-title">收入分类</view>
+      <view class="category-item" wx:for="{{incomeCategories}}" wx:key="name">
+        <view class="category-head"><view class="category-name"><view class="dot" style="background: {{item.color}}"></view><text>{{item.name}}</text></view><text>{{item.percent}}%</text></view>
+        <view class="bar"><view class="bar-fill" style="width: {{item.percent}}%; background: {{item.color}}"></view></view>
+        <text class="category-amount">¥{{item.amountText}}</text>
+      </view>
+      <view class="category-empty" wx:if="{{incomeCategories.length === 0}}">暂无收入</view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">支出分类</view>
+      <view class="category-item" wx:for="{{expenseCategories}}" wx:key="name">
+        <view class="category-head"><view class="category-name"><view class="dot" style="background: {{item.color}}"></view><text>{{item.name}}</text></view><text>{{item.percent}}%</text></view>
+        <view class="bar"><view class="bar-fill" style="width: {{item.percent}}%; background: {{item.color}}"></view></view>
+        <text class="category-amount">¥{{item.amountText}}</text>
+      </view>
+      <view class="category-empty" wx:if="{{expenseCategories.length === 0}}">暂无支出</view>
+    </view>
+  </block>
+
+  <button class="export-btn" bindtap="exportReport" loading="{{exporting}}" disabled="{{exporting || !report || report.count === 0}}">{{exporting ? '正在生成' : '导出 Excel 报表'}}</button>
+</view>

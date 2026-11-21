@@ -1,0 +1,126 @@
+<!--
+  自产农产品免税核算申报页
+  核心功能：一键核算 + 结果展示 + 确认申报
+-->
+<view class="page-tax-exemption">
+  <!-- 头部说明 -->
+  <view class="tax-header">
+    <view class="tax-header__bg"></view>
+    <text class="tax-header__title">自产农产品免税核算</text>
+    <text class="tax-header__desc">基于内蒙古北疆地区税务政策，自动匹配免税规则，一键完成核算申报</text>
+  </view>
+
+  <!-- 核算表单 -->
+  <view class="calc-form">
+    <view class="form-section">
+      <text class="form-label">核算周期</text>
+      <picker mode="date" fields="month" value="{{calcPeriod}}" bindchange="onPeriodChange">
+        <view class="form-picker">{{calcPeriod || '请选择核算月份'}} <text class="picker-arrow">›</text></view>
+      </picker>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">核算税种</text>
+      <view class="type-row">
+        <view class="type-opt {{calcTaxType === item ? 'type-opt--active' : ''}}" wx:for="{{taxTypes}}" wx:key="*this" bindtap="onTaxTypeSelect" data-value="{{item}}">{{item}}</view>
+      </view>
+    </view>
+
+    <button class="calc-btn" bindtap="onCalculate" loading="{{calculating}}">
+      {{calculating ? '核算中...' : '🔍 开始免税核算'}}
+    </button>
+  </view>
+
+  <!-- 核算结果 -->
+  <block wx:if="{{result}}">
+    <!-- 结果摘要 -->
+    <view class="result-summary">
+      <view class="result-summary__item result-summary__item--sales">
+        <text class="result-summary__value">¥{{formatNum(result.totalSalesAmount)}}</text>
+        <text class="result-summary__label">当期农产品销售额</text>
+      </view>
+      <view class="result-summary__item result-summary__item--exemption">
+        <text class="result-summary__value">¥{{formatNum(result.exemptionAmount)}}</text>
+        <text class="result-summary__label">免税收入额</text>
+      </view>
+      <view class="result-summary__item result-summary__item--saved">
+        <text class="result-summary__value text-success">¥{{formatNum(result.taxExempted)}}</text>
+        <text class="result-summary__label">节约税额</text>
+      </view>
+    </view>
+
+    <!-- 详细核算明细 -->
+    <z-card title="📊 核算明细">
+      <view class="result-detail">
+        <view class="result-detail__row">
+          <text class="result-detail__label">销售总额</text>
+          <text class="result-detail__value">¥{{formatNum(result.totalSalesAmount)}}</text>
+        </view>
+        <view class="result-detail__row">
+          <text class="result-detail__label">免税收入</text>
+          <text class="result-detail__value text-success">¥{{formatNum(result.exemptionAmount)}}</text>
+        </view>
+        <view class="result-detail__row">
+          <text class="result-detail__label">应税收入</text>
+          <text class="result-detail__value {{result.taxableAmount > 0 ? 'text-warning' : ''}}">¥{{formatNum(result.taxableAmount)}}</text>
+        </view>
+        <view class="result-detail__divider"></view>
+        <view class="result-detail__row">
+          <text class="result-detail__label">适用税率</text>
+          <text class="result-detail__value">{{result.taxRate * 100}}%</text>
+        </view>
+        <view class="result-detail__row">
+          <text class="result-detail__label">应缴税额</text>
+          <text class="result-detail__value text-warning">¥{{formatNum(result.taxPayable)}}</text>
+        </view>
+        <view class="result-detail__row">
+          <text class="result-detail__label">免税金额</text>
+          <text class="result-detail__value text-success">-¥{{formatNum(result.taxExempted)}}</text>
+        </view>
+        <view class="result-detail__divider"></view>
+        <view class="result-detail__row result-detail__row--final">
+          <text class="result-detail__label">实缴税额</text>
+          <text class="result-detail__value {{result.actualTax > 0 ? 'text-danger' : 'text-success'}} fw-700">¥{{formatNum(result.actualTax)}}</text>
+        </view>
+      </view>
+    </z-card>
+
+    <!-- 适用规则 -->
+    <z-card title="📋 适用免税政策" accent="{{true}}" accent-color="#07c160">
+      <view class="applied-rules">
+        <view class="applied-rule" wx:for="{{result.appliedRules}}" wx:key="ruleCode">
+          <view class="applied-rule__header">
+            <text class="applied-rule__code">{{item.ruleCode}}</text>
+            <text class="applied-rule__rate">{{item.exemptionRate * 100}}% 免征</text>
+          </view>
+          <text class="applied-rule__name">{{item.ruleName}}</text>
+          <text class="applied-rule__amount">免除税额：¥{{formatNum(item.exemptedAmount * result.taxRate)}}</text>
+          <text class="applied-rule__basis">依据：{{item.legalBasis}}</text>
+        </view>
+      </view>
+    </z-card>
+
+    <!-- 操作按钮 -->
+    <view class="result-actions">
+      <button class="agri-btn agri-btn--primary" bindtap="onConfirm" wx:if="{{result.status === 'draft'}}">✅ 确认核算结果</button>
+      <button class="agri-btn agri-btn--success" bindtap="onDeclare" wx:if="{{result.status === 'confirmed'}}">📤 推送至税务申报</button>
+      <button class="agri-btn agri-btn--secondary" bindtap="onRecalculate">🔄 重新核算</button>
+    </view>
+  </block>
+
+  <!-- 免税额度信息 -->
+  <z-card title="💡 免税额度使用情况" wx:if="{{quota}}">
+    <view class="quota-bar">
+      <view class="quota-bar__header">
+        <text>年度免税额度</text>
+        <text>已用 ¥{{formatNum(quota.usedAmount)}} / 总额 ¥{{formatNum(quota.totalLimit)}}</text>
+      </view>
+      <view class="quota-bar__track">
+        <view class="quota-bar__fill" style="width: {{quota.usedAmount / quota.totalLimit * 100}}%"></view>
+      </view>
+      <text class="quota-bar__remaining">剩余额度：<text class="fw-600 text-success">¥{{formatNum(quota.remaining)}}</text></text>
+    </view>
+  </z-card>
+
+  <view class="agri-safe-bottom"></view>
+</view>

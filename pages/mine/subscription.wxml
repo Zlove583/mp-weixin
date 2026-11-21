@@ -1,0 +1,105 @@
+<view class="page-subscription data-v-cbfe38d9">
+  <view class="sub-header data-v-cbfe38d9">
+    <text class="sub-header__title data-v-cbfe38d9">选择适合你的版本</text>
+    <text class="sub-header__desc data-v-cbfe38d9">当前：{{a}}</text>
+  </view>
+
+  <view class="sub-plans data-v-cbfe38d9">
+    <!-- ── 基础版 ── -->
+    <view class="{{['plan-card', 'data-v-cbfe38d9', d && 'active']}}">
+      <view class="plan-card__header data-v-cbfe38d9">
+        <text class="plan-name data-v-cbfe38d9">基础版</text>
+        <text class="plan-price data-v-cbfe38d9">免费<text class="plan-price__period data-v-cbfe38d9">/永久</text></text>
+      </view>
+      <view class="plan-features data-v-cbfe38d9">
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 物料档案管理</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 出入库登记（3人共享）</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 台账查询与导出</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 票据OCR识别（20张/月）</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 简易记账</view>
+        <view class="plan-feature disabled data-v-cbfe38d9">— 全税种申报</view>
+        <view class="plan-feature disabled data-v-cbfe38d9">— 经营财务分析</view>
+        <view class="plan-feature disabled data-v-cbfe38d9">— 税务风险检测</view>
+      </view>
+      <button wx:if="{{b}}" class="plan-btn data-v-cbfe38d9" bindtap="{{c}}">降级为基础版</button>
+      <button wx:else class="plan-btn plan-btn--current data-v-cbfe38d9" disabled>当前版本</button>
+    </view>
+
+    <!-- ── 标准版 ── -->
+    <view class="{{['plan-card', 'plan-card--recommend', 'data-v-cbfe38d9', i && 'active']}}">
+      <view class="plan-card__badge data-v-cbfe38d9">🔥 推荐</view>
+      <view class="plan-card__header data-v-cbfe38d9">
+        <text class="plan-name data-v-cbfe38d9">标准版</text>
+        <text class="plan-price data-v-cbfe38d9">¥{{g}}<text class="plan-price__period data-v-cbfe38d9">/月</text></text>
+        <text class="plan-yearly data-v-cbfe38d9">{{h}}</text>
+      </view>
+
+      <!-- 周期选择器 -->
+      <view wx:if="{{e}}" class="period-selector data-v-cbfe38d9">
+        <view class="{{['period-option', 'data-v-cbfe38d9', k && 'period-option--active']}}" bindtap="{{j}}">月付</view>
+        <view class="{{['period-option', 'data-v-cbfe38d9', m && 'period-option--active']}}" bindtap="{{l}}">年付</view>
+      </view>
+
+      <view class="plan-features data-v-cbfe38d9">
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> <text class="fw-600 data-v-cbfe38d9">基础版全部功能</text></view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 多部门权限划分（10人）</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 全税种一键申报</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 月度经营财务分析</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 10项基础税务风险检测</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 批量Excel数据导出</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 定制单据模板</view>
+      </view>
+
+      <button wx:if="{{e}}" class="{{['plan-btn', 'plan-btn--primary', 'data-v-cbfe38d9', n ? 'plan-btn--paying' : '']}}" bindtap="{{f}}" loading="{{n}}" disabled="{{n}}">{{n ? '支付中...' : '立即升级'}}</button>
+      <button wx:else class="plan-btn plan-btn--current data-v-cbfe38d9" disabled>当前版本</button>
+    </view>
+
+    <!-- ── 高端定制版 ── -->
+    <view class="{{['plan-card', 'data-v-cbfe38d9', t && 'active']}}">
+      <view class="plan-card__header data-v-cbfe38d9">
+        <text class="plan-name data-v-cbfe38d9">高端定制版</text>
+        <text class="plan-price data-v-cbfe38d9">¥{{r}}<text class="plan-price__period data-v-cbfe38d9">/月</text></text>
+        <text class="plan-yearly data-v-cbfe38d9">{{s}}</text>
+      </view>
+
+      <!-- 周期选择器 -->
+      <view wx:if="{{p}}" class="period-selector data-v-cbfe38d9">
+        <view class="{{['period-option', 'data-v-cbfe38d9', v && 'period-option--active']}}" bindtap="{{u}}">月付</view>
+        <view class="{{['period-option', 'data-v-cbfe38d9', x && 'period-option--active']}}" bindtap="{{w}}">年付</view>
+      </view>
+
+      <view class="plan-features data-v-cbfe38d9">
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> <text class="fw-600 data-v-cbfe38d9">标准版全部功能</text></view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 批量账务处理后台</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 年度汇算清缴筹划</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 政企数据对接</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 专属会计顾问咨询</view>
+        <view class="plan-feature data-v-cbfe38d9"><text class="check data-v-cbfe38d9">✓</text> 不限量成员、不限功能</view>
+      </view>
+
+      <button wx:if="{{p}}" class="{{['plan-btn', 'data-v-cbfe38d9', y ? 'plan-btn--paying' : '']}}" bindtap="{{q}}" loading="{{y}}" disabled="{{y}}">{{y ? '支付中...' : '升级高端版'}}</button>
+      <button wx:else class="plan-btn plan-btn--current data-v-cbfe38d9" disabled>当前版本</button>
+    </view>
+  </view>
+
+  <!-- 线下配套服务 -->
+  <z-card wx:if="{{B}}" class="data-v-cbfe38d9" u-s="{{['d']}}" u-i="cbfe38d9-0" bind:__l="__l" u-p="{{B}}">
+    <view class="service-list data-v-cbfe38d9">
+      <view class="service-item data-v-cbfe38d9">
+        <text class="service-name data-v-cbfe38d9">会计团队上门培训</text>
+        <text class="service-price data-v-cbfe38d9">¥2,000/次起</text>
+      </view>
+      <view class="service-item data-v-cbfe38d9">
+        <text class="service-name data-v-cbfe38d9">财税筹划咨询</text>
+        <text class="service-price data-v-cbfe38d9">¥5,000/年起</text>
+      </view>
+      <view class="service-item data-v-cbfe38d9">
+        <text class="service-name data-v-cbfe38d9">工商税务代办</text>
+        <text class="service-price data-v-cbfe38d9">按单报价</text>
+      </view>
+      <view class="service-contact data-v-cbfe38d9" bindtap="{{A}}">
+        <text class="data-v-cbfe38d9">📞 咨询线下服务：400-XXX-XXXX</text>
+      </view>
+    </view>
+  </z-card>
+</view>

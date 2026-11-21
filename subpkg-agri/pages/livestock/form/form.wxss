@@ -1,0 +1,152 @@
+/**
+ * 牲畜信息登记表单页
+ * 复用项目通用表单样式
+ */
+
+page {
+  background-color: #f2f3f7;
+  font-size: 28rpx;
+  color: #1a1a2e;
+}
+
+.page-livestock-form {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* ===== 表单 ===== */
+.form {
+  padding: 24rpx;
+}
+
+.form-section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a1a2e;
+  padding: 24rpx 0 16rpx;
+  margin-top: 8rpx;
+}
+
+.form-section {
+  margin-bottom: 20rpx;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+  color: #1a1a2e;
+}
+
+.required {
+  color: #fa5151;
+}
+
+.form-input {
+  background: #f8f9fb;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  width: 100%;
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #85b8f8;
+  box-shadow: 0 0 0 4rpx rgba(26,111,232,.06);
+}
+
+.form-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fb;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+}
+
+.picker-arrow {
+  font-size: 32rpx;
+  color: #b0b0c3;
+}
+
+.form-textarea {
+  background: #f8f9fb;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  width: 100%;
+  height: 160rpx;
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+}
+
+/* ===== 类型选择按钮 ===== */
+.type-row {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.type-row--2 .type-opt {
+  flex: 1;
+}
+
+.type-opt {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 16rpx;
+  background: #f8f9fb;
+  border-radius: 14rpx;
+  font-size: 26rpx;
+  color: #7c7c9a;
+  border: 2rpx solid transparent;
+  transition: all .2s ease;
+}
+
+.type-opt--active {
+  background: linear-gradient(135deg, #1a6fe8, #5b9cf5);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 20rpx rgba(26,111,232,.2);
+}
+
+/* ===== 提交按钮 ===== */
+.form-submit {
+  margin-top: 40rpx;
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #1a6fe8, #5b9cf5);
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 0 24rpx rgba(26,111,232,.2);
+}
+
+.submit-btn:active {
+  transform: scale(.98);
+}
+
+.submit-btn[disabled] {
+  opacity: .4;
+  box-shadow: none;
+}
+
+.submit-btn--draft {
+  background: #fff;
+  color: #1a6fe8;
+  border: 2rpx solid #1a6fe8;
+  box-shadow: none;
+  margin-top: 16rpx;
+}
+
+/* ===== 通用 ===== */
+.agri-safe-bottom { height: 40rpx; }

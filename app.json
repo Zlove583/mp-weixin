@@ -1,0 +1,19 @@
+{
+  "pages": ["pages/login/index", "pages/index/index", "pages/inventory/index", "pages/inventory/in-out", "pages/inventory/detail", "pages/inventory/check", "pages/accounting/index", "pages/accounting/record", "pages/accounting/report", "pages/ocr/index", "pages/mine/index", "pages/mine/settings", "pages/mine/subscription", "pages/ledger-export/index"],
+  "subPackages": [
+    { "root": "subpkg-tax", "pages": ["pages/declaration/index", "pages/risk/index"] },
+    { "root": "subpkg-agri", "pages": ["pages/index/index", "pages/livestock/index/index", "pages/livestock/form/form", "pages/livestock/detail/detail", "pages/tax-exemption/index/index", "pages/tax-exemption/history/index"] }
+  ],
+  "window": { "navigationBarTextStyle": "white", "navigationBarTitleText": "蒙小账", "navigationBarBackgroundColor": "#1A6FE8", "backgroundColor": "#F5F6FA" },
+  "tabBar": { "color": "#999999", "selectedColor": "#1A6FE8", "backgroundColor": "#FFFFFF", "borderStyle": "black", "list": [
+    { "pagePath": "pages/index/index", "iconPath": "static/tabbar/home.png", "selectedIconPath": "static/tabbar/home-active.png", "text": "Home" },
+    { "pagePath": "pages/inventory/index", "iconPath": "static/tabbar/inventory.png", "selectedIconPath": "static/tabbar/inventory-active.png", "text": "Stock" },
+    { "pagePath": "pages/accounting/index", "iconPath": "static/tabbar/accounting.png", "selectedIconPath": "static/tabbar/accounting-active.png", "text": "Accounts" },
+    { "pagePath": "pages/mine/index", "iconPath": "static/tabbar/mine.png", "selectedIconPath": "static/tabbar/mine-active.png", "text": "Mine" }
+  ] },
+  "preloadRule": { "pages/accounting/index": { "network": "all", "packages": ["subpkg-tax"] }, "pages/index/index": { "network": "all", "packages": ["subpkg-agri"] } },
+  "__usePrivacyCheck__": true,
+  "lazyCodeLoading": "requiredComponents",
+  "plugins": {},
+  "usingComponents": {}
+}

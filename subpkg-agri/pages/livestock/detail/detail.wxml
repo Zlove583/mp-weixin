@@ -1,0 +1,156 @@
+<!--
+  牲畜详情页
+  展示完整信息 + 操作按钮（编辑、标记出栏、标记死亡）
+-->
+<view class="page-livestock-detail">
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{!item}}">
+    <view class="skeleton" style="height:200rpx;margin-bottom:16rpx;"></view>
+    <view class="skeleton" style="height:120rpx;margin-bottom:16rpx;"></view>
+    <view class="skeleton" style="height:160rpx;"></view>
+  </view>
+
+  <block wx:if="{{item}}">
+    <!-- 状态头部 -->
+    <view class="detail-header detail-header--{{item.currentStatus === '存栏' ? 'alive' : item.currentStatus === '出栏' ? 'sold' : 'dead'}}">
+      <view class="detail-header__top">
+        <text class="detail-header__name">{{item.breed || item.category}}</text>
+        <text class="detail-header__status">{{item.currentStatus}}</text>
+      </view>
+      <text class="detail-header__no">{{item.livestockNo}}</text>
+    </view>
+
+    <!-- 基本信息卡片 -->
+    <z-card title="📋 基本信息">
+      <view class="detail-grid">
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">牲畜种类</text>
+          <text class="detail-grid__value">{{item.category}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">品种</text>
+          <text class="detail-grid__value">{{item.breed || '未填写'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">性别</text>
+          <text class="detail-grid__value">{{item.gender === 0 ? '母' : '公'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">体重</text>
+          <text class="detail-grid__value">{{item.weightKg ? item.weightKg + ' kg' : '未填写'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">出生日期</text>
+          <text class="detail-grid__value">{{item.birthDate || '未填写'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">健康状况</text>
+          <text class="detail-grid__value {{item.healthStatus === '健康' ? 'text-success' : item.healthStatus === '治疗中' ? 'text-warning' : ''}}">{{item.healthStatus}}</text>
+        </view>
+      </view>
+    </z-card>
+
+    <!-- 购入信息 -->
+    <z-card title="💰 购入信息">
+      <view class="detail-grid">
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">来源方式</text>
+          <text class="detail-grid__value">{{item.source}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">购入价格</text>
+          <text class="detail-grid__value text-warning fw-600">{{item.purchasePrice > 0 ? '¥' + item.purchasePrice : '自繁'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">购入日期</text>
+          <text class="detail-grid__value">{{item.purchaseDate || '未填写'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">购入来源</text>
+          <text class="detail-grid__value">{{item.purchaseFrom || '未填写'}}</text>
+        </view>
+      </view>
+    </z-card>
+
+    <!-- 出栏信息（仅出栏状态显示） -->
+    <z-card title="📤 出栏信息" wx:if="{{item.currentStatus === '出栏'}}">
+      <view class="detail-grid">
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">出栏售价</text>
+          <text class="detail-grid__value text-danger fw-600">¥{{item.salePrice}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">出栏日期</text>
+          <text class="detail-grid__value">{{item.saleDate}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">出栏去向</text>
+          <text class="detail-grid__value">{{item.saleTo}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">养殖利润</text>
+          <text class="detail-grid__value {{(item.salePrice - item.purchasePrice) >= 0 ? 'text-success' : 'text-danger'}} fw-600">¥{{item.salePrice - item.purchasePrice}}</text>
+        </view>
+      </view>
+    </z-card>
+
+    <!-- 死亡信息（仅死亡状态显示） -->
+    <z-card title="⚠️ 死亡记录" wx:if="{{item.currentStatus === '死亡'}}">
+      <view class="detail-grid">
+        <view class="detail-grid__item detail-grid__item--full">
+          <text class="detail-grid__label">死亡原因</text>
+          <text class="detail-grid__value text-danger">{{item.deathCause || '未记录'}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">记录日期</text>
+          <text class="detail-grid__value">{{item.statusDate}}</text>
+        </view>
+        <view class="detail-grid__item">
+          <text class="detail-grid__label">损失金额</text>
+          <text class="detail-grid__value text-danger fw-600">¥{{item.purchasePrice}}</text>
+        </view>
+      </view>
+    </z-card>
+
+    <!-- 养殖信息 -->
+    <z-card title="🏥 养殖管理">
+      <view class="detail-info-row">
+        <text class="detail-info-row__label">饲喂方式</text>
+        <text class="detail-info-row__value">{{item.feedType || '未填写'}}</text>
+      </view>
+      <view class="detail-info-row">
+        <text class="detail-info-row__label">疫苗接种</text>
+        <text class="detail-info-row__value">{{item.vaccination || '未填写'}}</text>
+      </view>
+      <view class="detail-info-row" wx:if="{{item.notes}}">
+        <text class="detail-info-row__label">备注</text>
+        <text class="detail-info-row__value">{{item.notes}}</text>
+      </view>
+    </z-card>
+
+    <!-- 时间信息 -->
+    <z-card title="📅 记录信息" tight="{{true}}">
+      <view class="detail-info-row">
+        <text class="detail-info-row__label">创建时间</text>
+        <text class="detail-info-row__value">{{item.createdAt}}</text>
+      </view>
+      <view class="detail-info-row">
+        <text class="detail-info-row__label">最后更新</text>
+        <text class="detail-info-row__value">{{item.updatedAt}}</text>
+      </view>
+    </z-card>
+
+    <!-- 底部操作按钮 -->
+    <view class="detail-actions" wx:if="{{item.currentStatus === '存栏'}}">
+      <button class="agri-btn agri-btn--primary" bindtap="goEdit">✏️ 编辑信息</button>
+      <button class="agri-btn agri-btn--warning" bindtap="onSoldClick">📤 标记出栏</button>
+      <button class="agri-btn agri-btn--danger" bindtap="onDeadClick">⚠️ 标记死亡</button>
+    </view>
+    <view class="detail-actions" wx:else>
+      <button class="agri-btn agri-btn--primary" bindtap="goEdit">✏️ 编辑信息</button>
+      <button class="agri-btn agri-btn--danger-outline" bindtap="onDeleteClick">🗑️ 删除记录</button>
+    </view>
+  </block>
+
+  <view class="agri-safe-bottom"></view>
+</view>

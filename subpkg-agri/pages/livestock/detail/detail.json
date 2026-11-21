@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "z-card": "/components/z-card/z-card"
+  },
+  "navigationBarTitleText": "牲畜详情"
+}

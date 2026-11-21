@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "z-card": "/components/z-card/z-card",
+    "z-empty": "/components/z-empty/z-empty"
+  },
+  "navigationBarTitleText": "牲畜存栏台账"
+}

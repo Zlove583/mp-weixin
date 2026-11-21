@@ -1,0 +1,9 @@
+page { background: #f5f6fa; }
+.page { padding: 32rpx 24rpx; }
+.card { background: #fff; border-radius: 20rpx; padding: 32rpx; box-shadow: 0 4rpx 18rpx rgba(0,0,0,.05); }
+.title { font-size: 36rpx; font-weight: 700; color: #1a1a2e; }
+.desc { font-size: 26rpx; color: #777; margin: 16rpx 0 28rpx; line-height: 1.6; }
+.field { display: flex; justify-content: space-between; align-items: center; padding: 24rpx 0; border-top: 1rpx solid #eee; font-size: 28rpx; }
+.field picker { color: #1a6fe8; }
+.count { margin: 28rpx 0 20rpx; color: #777; font-size: 26rpx; }
+.export { background: #1a6fe8; color: #fff; border-radius: 44rpx; font-size: 30rpx; }

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "蒙小账",
+  "navigationBarBackgroundColor": "#1A6FE8",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "z-card": "../../components/z-card/z-card"
+  }
+}

@@ -1,0 +1,110 @@
+<!--
+  牲畜信息登记表单页
+  支持新增 + 编辑两种模式
+  极简录入：必填项最少化，一键保存
+-->
+<view class="page-livestock-form">
+  <view class="form">
+    <!-- 牲畜基本信息 -->
+    <view class="form-section-title">📋 基本信息</view>
+
+    <view class="form-section">
+      <text class="form-label">牲畜编号/耳标号 <text class="required">*</text></text>
+      <input type="text" placeholder="如 NM-2026001 或耳标编号" class="form-input" value="{{form.livestockNo}}" bindinput="onFieldInput" data-field="livestockNo"/>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">牲畜种类 <text class="required">*</text></text>
+      <view class="type-row">
+        <view class="type-opt {{form.category === item ? 'type-opt--active' : ''}}" wx:for="{{categories}}" wx:key="*this" bindtap="onCategorySelect" data-value="{{item}}">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">品种</text>
+      <input type="text" placeholder="如：西门塔尔牛、安格斯牛、蒙古羊" class="form-input" value="{{form.breed}}" bindinput="onFieldInput" data-field="breed"/>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">性别</text>
+      <view class="type-row type-row--2">
+        <view class="type-opt {{form.gender === 0 ? 'type-opt--active' : ''}}" bindtap="onGenderSelect" data-value="{{0}}">母</view>
+        <view class="type-opt {{form.gender === 1 ? 'type-opt--active' : ''}}" bindtap="onGenderSelect" data-value="{{1}}">公</view>
+      </view>
+    </view>
+
+    <!-- 来源与购入 -->
+    <view class="form-section-title">💰 来源与成本</view>
+
+    <view class="form-section">
+      <text class="form-label">来源方式</text>
+      <picker range="{{sources}}" value="{{sourceIndex}}" bindchange="onSourceChange">
+        <view class="form-picker">{{form.source || '请选择来源'}} <text class="picker-arrow">›</text></view>
+      </picker>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">购入价格（元）</text>
+      <input type="digit" placeholder="请输入购入价格" class="form-input" value="{{form.purchasePrice}}" bindinput="onFieldInput" data-field="purchasePrice"/>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">购入日期</text>
+      <picker mode="date" value="{{form.purchaseDate}}" bindchange="onDateChange" data-field="purchaseDate">
+        <view class="form-picker">{{form.purchaseDate || '请选择日期'}} <text class="picker-arrow">›</text></view>
+      </picker>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">购入来源（供应商/个人）</text>
+      <input type="text" placeholder="如：通辽市科尔沁牛市" class="form-input" value="{{form.purchaseFrom}}" bindinput="onFieldInput" data-field="purchaseFrom"/>
+    </view>
+
+    <!-- 养殖信息 -->
+    <view class="form-section-title">🏥 养殖信息</view>
+
+    <view class="form-section">
+      <text class="form-label">出生日期</text>
+      <picker mode="date" value="{{form.birthDate}}" bindchange="onDateChange" data-field="birthDate" end="{{todayStr}}">
+        <view class="form-picker">{{form.birthDate || '请选择日期'}} <text class="picker-arrow">›</text></view>
+      </picker>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">体重（公斤）</text>
+      <input type="digit" placeholder="请输入体重" class="form-input" value="{{form.weightKg}}" bindinput="onFieldInput" data-field="weightKg"/>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">饲喂方式/饲料类型</text>
+      <input type="text" placeholder="如：青贮玉米+苜蓿草+精料" class="form-input" value="{{form.feedType}}" bindinput="onFieldInput" data-field="feedType"/>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">疫苗接种记录</text>
+      <textarea placeholder="如：口蹄疫疫苗(2026-03)" class="form-textarea" maxlength="200" value="{{form.vaccination}}" bindinput="onFieldInput" data-field="vaccination"/>
+    </view>
+
+    <view class="form-section">
+      <text class="form-label">健康状况</text>
+      <view class="type-row">
+        <view class="type-opt {{form.healthStatus === item ? 'type-opt--active' : ''}}" wx:for="{{healthStatuses}}" wx:key="*this" bindtap="onHealthSelect" data-value="{{item}}">{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-section-title">📝 备注</view>
+
+    <view class="form-section">
+      <textarea placeholder="可选备注信息，如养殖注意事项、预计出栏时间等" class="form-textarea" maxlength="500" value="{{form.notes}}" bindinput="onFieldInput" data-field="notes"/>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="form-submit">
+      <button class="submit-btn" disabled="{{!canSubmit}}" bindtap="onSubmit">{{isEdit ? '保存修改' : '确认登记'}}</button>
+      <button class="submit-btn submit-btn--draft" wx:if="{{isEdit && currentItem && currentItem.currentStatus === '存栏'}}" bindtap="onMarkSold">标记出栏</button>
+    </view>
+  </view>
+
+  <view class="agri-safe-bottom"></view>
+</view>

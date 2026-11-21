@@ -1,0 +1,77 @@
+<!--
+  免税核算历史记录页
+  按税种、状态筛选，支持查看详情
+-->
+<view class="page-tax-history">
+  <!-- 月份筛选 -->
+  <view class="history-filter">
+    <picker mode="date" fields="month" value="{{filterPeriod}}" bindchange="onPeriodFilterChange">
+      <view class="history-filter__picker">{{filterPeriod || '全部月份'}} <text class="picker-arrow">▼</text></view>
+    </picker>
+    <view class="filter-tabs">
+      <view class="filter-tab {{filterTaxType === '' ? 'filter-tab--active' : ''}}" bindtap="onTaxTypeFilter" data-value="">全部税种</view>
+      <view class="filter-tab {{filterTaxType === item ? 'filter-tab--active' : ''}}" wx:for="{{taxTypes}}" wx:key="*this" bindtap="onTaxTypeFilter" data-value="{{item}}">{{item}}</view>
+    </view>
+    <view class="filter-tabs">
+      <view class="filter-tab {{filterStatus === '' ? 'filter-tab--active' : ''}}" bindtap="onStatusFilter" data-value="">全部</view>
+      <view class="filter-tab {{filterStatus === 'confirmed' ? 'filter-tab--active' : ''}}" bindtap="onStatusFilter" data-value="confirmed">已确认</view>
+      <view class="filter-tab {{filterStatus === 'declared' ? 'filter-tab--active' : ''}}" bindtap="onStatusFilter" data-value="declared">已申报</view>
+      <view class="filter-tab {{filterStatus === 'draft' ? 'filter-tab--active' : ''}}" bindtap="onStatusFilter" data-value="draft">草稿</view>
+    </view>
+  </view>
+
+  <!-- 汇总 -->
+  <view class="history-summary" wx:if="{{!loading && filteredRecords.length > 0}}">
+    <text>共 <text class="fw-600">{{filteredRecords.length}}</text> 条记录</text>
+    <text>累计免税 <text class="fw-600 text-success">¥{{totalExempted}}</text></text>
+  </view>
+
+  <!-- 加载 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <view class="skeleton" style="height:160rpx;margin-bottom:12rpx;" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
+  <!-- 空 -->
+  <view class="agri-empty" wx:if="{{!loading && filteredRecords.length === 0}}">
+    <text class="agri-empty__icon">📭</text>
+    <text class="agri-empty__text">暂无核算记录</text>
+    <button class="agri-btn agri-btn--primary agri-btn--sm" bindtap="goCalc">去核算</button>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="record-list" wx:if="{{!loading && filteredRecords.length > 0}}">
+    <view class="record-card" wx:for="{{filteredRecords}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="record-card__header">
+        <view class="record-card__left">
+          <text class="record-card__no">{{item.recordNo}}</text>
+          <text class="record-card__period">{{item.recordPeriod}}</text>
+        </view>
+        <text class="record-card__status record-card__status--{{item.status}}">{{item.status === 'draft' ? '草稿' : item.status === 'confirmed' ? '已确认' : '已申报'}}</text>
+      </view>
+      <view class="record-card__body">
+        <view class="record-card__item">
+          <text class="record-card__label">税种</text>
+          <text class="record-card__value">{{item.taxType}}</text>
+        </view>
+        <view class="record-card__item">
+          <text class="record-card__label">销售额</text>
+          <text class="record-card__value">¥{{item.totalSalesAmount}}</text>
+        </view>
+        <view class="record-card__item">
+          <text class="record-card__label">免税金额</text>
+          <text class="record-card__value text-success">¥{{item.exemptionAmount}}</text>
+        </view>
+        <view class="record-card__item">
+          <text class="record-card__label">节约税额</text>
+          <text class="record-card__value text-success fw-600">¥{{item.taxExempted}}</text>
+        </view>
+      </view>
+      <view class="record-card__footer">
+        <text class="record-card__date">{{item.createdAt}}</text>
+        <text class="record-card__arrow">查看详情 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="agri-safe-bottom"></view>
+</view>

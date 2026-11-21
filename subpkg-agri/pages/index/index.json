@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "z-card": "/components/z-card/z-card"
+  },
+  "navigationBarTitleText": "北疆农牧数字化"
+}
