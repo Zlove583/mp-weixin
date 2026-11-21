@@ -4,8 +4,8 @@ const cloud = require('wx-server-sdk')
 const crypto = require('crypto')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const SECRET_ID = 'AKIDU8jIj5PYddcbaP0dCmBYkhRxFKAmBMK6'
-const SECRET_KEY = 'bAZmkV6ZpsiRzJPJ0ZCrbGk4NgmfO4dJ'
+const SECRET_ID = (process.env.TENCENT_SECRET_ID || '').trim()
+const SECRET_KEY = (process.env.TENCENT_SECRET_KEY || '').trim()
 const HOST = 'ocr.tencentcloudapi.com'
 
 // ── HMAC-SHA256 签名 ──
@@ -270,6 +270,9 @@ exports.main = async (event, context) => {
 
   try {
     if (!fileID) throw new Error('缺少图片fileID')
+    if (!SECRET_ID || !SECRET_KEY) {
+      throw new Error('请配置环境变量 TENCENT_SECRET_ID 和 TENCENT_SECRET_KEY')
+    }
 
     const b64 = await getBase64(fileID)
     console.log('[OCR] 下载云存储文件成功，base64长度:', b64.length)
